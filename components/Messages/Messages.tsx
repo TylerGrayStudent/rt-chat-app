@@ -1,33 +1,51 @@
+import { Button, Card, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
+import { Message } from "../../models/Message";
 import styles from "./Messages.module.css";
 
 const Messages: React.FC<{ socket: Socket }> = ({ socket }) => {
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState("");
 
-  // useEffect(() => {
-  //   socket.on("identity", (message: any) => {
-  //     setMessages([...messages, message]);
-  //   });
-  // }, [messages, socket]);
+  useEffect(() => {
+    socket.on("message", (message: Message) => {
+      console.log(message);
+      setMessages([...messages, message]);
+    });
+  }, [messages, socket]);
 
   const sendMessage = (message: string) => {
-    socket.emit("identity", message);
+    socket.emit("message", message);
   };
 
   return (
     <>
-      {messages.map((message, index) => (
-        <div key={index} className={styles.message}>
-          {message}
+      <Card className="h-full" variant="outlined">
+        <div className="flex flex-col-reverse content-end">
+          {messages.map((message, index) => (
+            <div key={index} className={styles.message}>
+              {message.user + ": " + message.message}
+            </div>
+          ))}
         </div>
-      ))}
-      <input
+        <div className="flex items-stretch">
+          <TextField
+            variant="standard"
+            className="w-5/6"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
+          <Button onClick={() => sendMessage(message)} className="w-1/6">
+            Send
+          </Button>
+        </div>
+        {/* <input
         value={message}
         onChange={(event) => setMessage(event.target.value)}
       ></input>
-      <button onClick={() => sendMessage(message)}>Test</button>
+      <button onClick={() => sendMessage(message)}>Test</button> */}
+      </Card>
     </>
   );
 };

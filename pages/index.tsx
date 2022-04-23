@@ -20,7 +20,7 @@ const Home: NextPage = () => {
   const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
-    const newSocket = io(`https://realtimechatapi.azurewebsites.net`, {
+    const newSocket = io(`${process.env.NEXT_PUBLIC_WS_API}`, {
       autoConnect: false,
     });
     newSocket.on("users", (users: { id: string; username: string }[]) => {

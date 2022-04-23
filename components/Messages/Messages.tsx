@@ -6,11 +6,11 @@ const Messages: React.FC<{ socket: Socket }> = ({ socket }) => {
   const [messages, setMessages] = useState<string[]>([]);
   const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    socket.on("identity", (message: any) => {
-      setMessages([...messages, message]);
-    });
-  }, [messages, socket]);
+  // useEffect(() => {
+  //   socket.on("identity", (message: any) => {
+  //     setMessages([...messages, message]);
+  //   });
+  // }, [messages, socket]);
 
   const sendMessage = (message: string) => {
     socket.emit("identity", message);

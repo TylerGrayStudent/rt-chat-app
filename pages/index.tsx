@@ -1,29 +1,32 @@
 import type { NextPage } from "next";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import Messages from "../styles/components/Messages/Messages";
+import Login from "../components/Login";
+import Messages from "../components/Messages/Messages";
 
 const Home: NextPage = () => {
   const [socket, setSocket] = useState<Socket | null>(null);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
     const newSocket = io(`http://${window.location.hostname}:3001`);
     setSocket(newSocket);
-    //return () => newSocket.close();
+    return () => {
+      newSocket.close();
+    };
   }, [setSocket]);
 
-  return (
-    <div className="App">
-      <header className="app-header">React Chat</header>
-      {socket ? (
-        <div className="chat-container">
-          <Messages socket={socket} />
-        </div>
-      ) : (
-        <div>Not Connected</div>
-      )}
-    </div>
-  );
+  const handleLogin = (userName: string) => {
+    console.log(socket);
+    while (!socket) {
+      console.log("waiting for socket");
+    }
+    socket.auth = { userName };
+    socket.connect();
+    setLoggedIn(true);
+  };
+
+  return <>{!loggedIn && <Login login={handleLogin} />}</>;
 };
 
 export default Home;

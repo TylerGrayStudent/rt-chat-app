@@ -4,9 +4,14 @@ import React, { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import Login from "../components/Login";
 import Messages from "../components/Messages/Messages";
+import StickyFooter from "../components/StickyFooter";
 import { UserList } from "../components/UserList";
 import { User } from "../models/User";
 import styles from "./index.module.css";
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
 
 const darkTheme = createTheme({
   palette: {
@@ -51,8 +56,8 @@ const Home: NextPage = () => {
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <Paper className={styles.page + " p-4"}>
-        <div className="flex flex-col">
+      <Paper className={"p-4 h-full"}>
+        <div className="flex flex-col justify-center items-center">
           <h1 className="text-4xl text-center pb-2">Real Time Chat App</h1>
           {!loggedIn && <Login login={handleLogin} />}
           {loggedIn && <UserList users={users} />}

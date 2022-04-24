@@ -40,11 +40,6 @@ const Messages: React.FC<{ socket: Socket }> = ({ socket }) => {
             Send
           </Button>
         </div>
-        {/* <input
-        value={message}
-        onChange={(event) => setMessage(event.target.value)}
-      ></input>
-      <button onClick={() => sendMessage(message)}>Test</button> */}
       </Card>
     </>
   );

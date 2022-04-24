@@ -4,13 +4,16 @@ import styles from "./Login.module.css";
 
 interface Props {
   login: (username: string) => void;
+  className?: string;
 }
 
-const Login: React.FC<Props> = ({ login }) => {
+const Login: React.FC<Props> = ({ login, className }) => {
   const [username, setUsername] = useState("");
   return (
     <Card
-      className={styles.card + " flex items-center flex-col gap-4"}
+      className={
+        "p-10 flex items-center flex-col gap-4 max-w-4xl " + className ?? ""
+      }
       variant="outlined"
     >
       <TextField
@@ -24,13 +27,22 @@ const Login: React.FC<Props> = ({ login }) => {
         variant="standard"
       />
 
-      <Button
-        className="w-1/2"
-        variant="outlined"
-        onClick={() => login(username)}
-      >
-        Login
-      </Button>
+      <div className="w-full flex justify-evenly">
+        <Button
+          className="w-1/4"
+          variant="outlined"
+          onClick={() => login(username)}
+        >
+          Login
+        </Button>
+        <Button
+          className="w-1/4"
+          variant="outlined"
+          onClick={() => login(username)}
+        >
+          Register
+        </Button>
+      </div>
     </Card>
   );
 };

@@ -1,49 +1,70 @@
 import { Button, Card, TextField } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
 import styles from "./Login.module.css";
 
 interface Props {
-  login: (username: string) => void;
+  onLogin: (username: string, password: string) => Promise<void>;
+  onRegister: () => void;
   className?: string;
 }
 
-const Login: React.FC<Props> = ({ login, className }) => {
+const Login: React.FC<Props> = ({ onLogin, onRegister, className }) => {
   const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const handleLogin = async (username: string, password: string) => {
+    setLoading(true);
+    await onLogin(username, password);
+    setLoading(false);
+  };
   return (
-    <Card
-      className={
-        "p-10 flex items-center flex-col gap-4 max-w-4xl " + className ?? ""
-      }
-      variant="outlined"
-    >
-      <TextField
-        className="w-full"
-        id="standard-basic"
-        value={username}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setUsername(e.target.value)
-        }
-        label="Username"
-        variant="standard"
-      />
+    <>
+      <Card className=" flex flex-col p-4" variant="outlined">
+        <TextField
+          className="w-full"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          label="Username"
+          variant="standard"
+        />{" "}
+        <TextField
+          className="w-full"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          label="Password"
+          variant="standard"
+          type="password"
+        />
+        <div className="p-4"></div>
+        <div className="w-full flex justify-evenly">
+          {!loading && (
+            <Button
+              className="w-1/2"
+              variant="outlined"
+              onClick={() => handleLogin(username, password)}
+            >
+              Login
+            </Button>
+          )}
+          {loading && (
+            <LoadingButton
+              className="w-1/2"
+              loading
+              variant="outlined"
+            ></LoadingButton>
+          )}
 
-      <div className="w-full flex justify-evenly">
-        <Button
-          className="w-1/4"
-          variant="outlined"
-          onClick={() => login(username)}
-        >
-          Login
-        </Button>
-        <Button
-          className="w-1/4"
-          variant="outlined"
-          onClick={() => login(username)}
-        >
-          Register
-        </Button>
-      </div>
-    </Card>
+          <Button
+            className="w-1/2"
+            variant="outlined"
+            onClick={() => onRegister()}
+          >
+            Register
+          </Button>
+        </div>
+      </Card>
+    </>
   );
 };
 

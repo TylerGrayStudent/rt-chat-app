@@ -5,15 +5,10 @@ import {
   getAuth,
   signInWithEmailAndPassword,
   signOut,
+  User,
 } from "firebase/auth";
-import {
-  addDoc,
-  collection,
-  getDocs,
-  getFirestore,
-  query,
-  where,
-} from "firebase/firestore";
+import { addDoc, collection, getFirestore } from "firebase/firestore";
+import { ApiUser } from "../models/User";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -37,21 +32,51 @@ const signInWithEmail = async (email: string, password: string) => {
   try {
     const res = await signInWithEmailAndPassword(auth, email, password);
     const user = res.user;
-    const ref = collection(db, "users");
-    const q = query(ref, where("uid", "==", user.uid));
-    const docs = await getDocs(q);
-    if (docs.docs.length === 0) {
-      console.log("missing user data");
-      // await addDoc(collection(db, "users"), {
-      //   uid: user.uid,
-      //   name: user.displayName,
-      //   provider: "email",
-      //   email: user.email,
-      // });
-    }
+    await ensureUserIsRegistered(user.uid, user);
     return user;
   } catch (e: any) {
     console.error(e);
+  }
+};
+
+const ensureUserIsRegistered = async (id: string, user: User) => {
+  const res = await fetch("http://localhost:3001/users/" + id)
+    .then((x) => {
+      return x.json();
+    })
+    .catch((e) => {
+      console.error(e);
+      return null;
+    });
+  if (res) {
+    console.log("user already registered");
+    return;
+  }
+  const apiUser: ApiUser = {
+    _id: id,
+    username: user.displayName ?? "",
+    email: user.email ?? "",
+    createdAt: new Date(),
+    friends: [],
+  };
+
+  const creationRes = await fetch("http://localhost:3001/users", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(apiUser),
+  })
+    .then((x) => {
+      return x.json();
+    })
+    .catch((e) => {
+      console.error(e);
+      return null;
+    });
+
+  if (!creationRes) {
+    alert("Error creating user");
   }
 };
 

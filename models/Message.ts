@@ -1,6 +1,6 @@
-import { User } from "./User";
+import { ApiUser } from "./User";
 
 export interface Message {
-  user: User;
+  user: ApiUser;
   message: string;
 }

@@ -1,9 +1,9 @@
 import { Card } from "@mui/material";
 import exp from "constants";
-import { User } from "../../models/User";
+import { ApiUser } from "../../models/User";
 
 interface Props {
-  users: User[];
+  users: ApiUser[];
 }
 
 const UserList: React.FC<Props> = ({ users }) => {
@@ -12,7 +12,7 @@ const UserList: React.FC<Props> = ({ users }) => {
       <Card variant="outlined">
         <h3>Currently Connected Users</h3>
         {users.map((u) => {
-          return <div key={u.id}>{u.username}</div>;
+          return <div key={u._id}>{u.username}</div>;
         })}
       </Card>
     </>

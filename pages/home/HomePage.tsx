@@ -1,14 +1,14 @@
 import { Paper } from "@mui/material";
 import { NextPage } from "next";
 import Logout from "../../components/Logout";
+import MainSidebar from "../../components/MainSidebar/MainSidebar";
 import Navbar from "../../components/Navbar/Navbar";
 
 const Home: NextPage = () => {
   return (
-    <Paper className="h-full">
+    <Paper className="h-screen">
       <Navbar />
-      <h1>Home</h1>
-      <Logout />
+      <MainSidebar />
     </Paper>
   );
 };
